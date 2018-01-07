@@ -1,0 +1,3 @@
+rootProject.name = 'BinanceTradeMobileApp'
+
+include ':app'
