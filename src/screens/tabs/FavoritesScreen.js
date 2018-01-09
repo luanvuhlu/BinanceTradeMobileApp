@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import binanceServices from '../../binanceApi/config';
 import CoinInfoItem from '../../components/coins/CoinInfoItem';
+import {connect} from 'react-redux';
+import {addFavorite, loadCoins, removeFavorite} from "../../redux/modules/coins/actions";
 
 class FavoritesScreen extends Component{
     static navigationOptions = {
@@ -18,48 +20,20 @@ class FavoritesScreen extends Component{
     constructor(props){
         super(props);
 
-        this.state = {
-            allCoins: [],
-            isLoading : false,
-            nameAsc: 1
-        };
         this.loadAllCoin = this.loadAllCoin.bind(this);
-        this._sortByName = this._sortByName.bind(this);
-        this.loadCoinInterval = null;
     }
 
     loadAllCoin(){
-        if(this.state.isLoading){
+        console.log(this.props.isCoinLoading);
+        if(this.props.isCoinLoading){
             return;
         }
-        this.setState({
-            isLoading: true,
-        });
-
-        binanceServices.allPricesTickers().then((tickers) => {
-            this.setState({
-                allCoins : this._sortByName(tickers),
-                isLoading: false
-            });
-        }).catch((error) => {
-            console.error(error);
-        })
+        this.props.loadCoins();
     }
 
     componentDidMount(){
-        binanceServices.test().then((responseJson) => {
-            console.log(responseJson);
-            if (responseJson) {
-                this.loadAllCoin();
-            } else {
-                console.log('Loading');
-            }
-
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-        this.loadCoinInterval = setInterval(this.loadAllCoin, 30000);
+       // this.loadAllCoin();
+       // this.loadCoinInterval = setInterval(this.loadAllCoin, 3000);
     }
 
     componentWillUnmount(){
@@ -79,23 +53,15 @@ class FavoritesScreen extends Component{
         );
     }
 
-    _sortByName(allCoins){
-        const nameAsc = this.state.nameAsc;
-        if(nameAsc === 0){
-            return allCoins;
-        }
-        return allCoins.sort((a, b) => nameAsc *(a-b));
-    }
-
     render(){
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableNativeFeedback onPress={() => {
                         this.state.nameAsc = this.state.nameAsc === 0 ? 1 : -1*this.state.nameAsc;
-                        this.setState({
-                            allCoins: this._sortByName(this.state.allCoins)
-                        });
+                        // this.setState({
+                        //     allCoins: this._sortByName(this.state.allCoins)
+                        // });
                     }}>
                         <Text style={styles.symbol}>Name</Text>
                     </TouchableNativeFeedback>
@@ -106,14 +72,14 @@ class FavoritesScreen extends Component{
                 </View>
                 <FlatList
                     style={styles.coinList}
-                    data={this.state.allCoins}
+                    data={this.props.favorites}
                     renderItem = {this._renderItem}
                     keyExtractor={(item) => item.symbol}
                     onPressItem={() => {
                     }}
                     refreshControl = {
                         <RefreshControl
-                            refreshing={this.state.isLoading}
+                            refreshing={this.props.isCoinLoading}
                             onRefresh={this.loadAllCoin}
                         />
                     }
@@ -144,5 +110,13 @@ const styles = StyleSheet.create({
        marginRight: 50,
     }
 });
-
-export default FavoritesScreen;
+const mapStateToProps = (state, ownProps) => ({
+    favorites: state.coins.favorites,
+    isCoinLoading: state.coins.isCoinLoading
+})
+const mapDispatchToProps = {
+    loadCoins,
+    addFavorite,
+    removeFavorite
+};
+export default connect(mapStateToProps, mapDispatchToProps)(FavoritesScreen);

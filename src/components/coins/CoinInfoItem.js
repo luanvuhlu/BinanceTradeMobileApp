@@ -7,16 +7,28 @@ import {
     TouchableNativeFeedback
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {connect} from 'react-redux';
+import {loadCoins, addFavorite, removeFavorite} from '../../redux/modules/coins/actions';
 
 class CoinInfoItem extends React.PureComponent {
     _onPress = () => {
         this.props.onPressItem(this.props.item);
     }
 
-    componentWillMount(){
+    componentWillReceiveProps(nextProps){
+        // TODO DATE Time
+        if(this.props.favorites.length !== nextProps.favorites.length){
+            this.setFavorite(nextProps);
+        }
+    }
+
+    setFavorite(props){
         this.setState({
-            favorite: this.props.favorite | false
+            favorite: props.favorites.some( f => f.symbol === this.props.item.symbol)
         });
+    }
+    componentWillMount(){
+       this.setFavorite(this.props);
     }
 
     render(){
@@ -27,6 +39,11 @@ class CoinInfoItem extends React.PureComponent {
                     <Text style={styles.symbol}>{this.props.item.symbol}</Text>
                     <Text style={styles.price}>{this.props.item.price}</Text>
                     <TouchableNativeFeedback style={styles.favorites} onPress={() => {
+                        if(this.state.favorite){
+                            this.props.removeFavorite(this.props.item);
+                        }else{
+                            this.props.addFavorite(this.props.item);
+                        }
                         this.setState({
                             favorite: !this.state.favorite
                         })
@@ -56,4 +73,13 @@ const styles = StyleSheet.create({
     }
 
 });
-export default CoinInfoItem;
+const mapStateToProps = (state, ownProps) => ({
+    coins: state.coins.coins,
+    favorites: state.coins.favorites,
+});
+const mapDispatchToProps = {
+    loadCoins,
+    addFavorite,
+    removeFavorite};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoinInfoItem);
