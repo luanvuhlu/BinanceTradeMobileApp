@@ -7,7 +7,8 @@ import {
     TouchableNativeFeedback,
     TouchableWithoutFeedback
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Icon } from 'react-native-elements'
+// import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {loadCoins, addFavorite, removeFavorite} from '../../redux/modules/coins/actions';
 
@@ -39,18 +40,22 @@ class CoinInfoItem extends React.PureComponent {
                 <View style={styles.container}>
                     <Text style={styles.symbol}>{this.props.item.symbol}</Text>
                     <Text style={styles.price}>{this.props.item.price}</Text>
-                    <TouchableWithoutFeedback style={styles.favorites} onPress={() => {
-                        if(this.state.favorite){
-                            this.props.removeFavorite(this.props.item);
-                        }else{
-                            this.props.addFavorite(this.props.item);
-                        }
-                        this.setState({
-                            favorite: !this.state.favorite
-                        })
-                    }}>
-                        <Icon name={this.state.favorite ? 'star' : 'star-o'} size={30} color={this.state.favorite ? 'yellow': 'black'} />
-                    </TouchableWithoutFeedback>
+                    <Icon 
+                        style={styles.favorites}
+                        name={this.state.favorite ? 'star' : 'star-o'} 
+                        size={30} color={this.state.favorite ? 'yellow': 'black'}
+                        type='font-awesome'
+                        underlayColor='white'
+                        onPress={() => {
+                            if(this.state.favorite){
+                                this.props.removeFavorite(this.props.item);
+                            }else{
+                                this.props.addFavorite(this.props.item);
+                            }
+                            this.setState({
+                                favorite: !this.state.favorite
+                            })
+                        }} />
 
                 </View>
             </TouchableWithoutFeedback>

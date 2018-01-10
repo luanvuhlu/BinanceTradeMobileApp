@@ -6,18 +6,26 @@ import {
     FlatList,
     RefreshControl,
     TouchableWithoutFeedback,
-    TouchableNativeFeedback
+    TouchableNativeFeedback,
+    Alert
 } from 'react-native';
 import {connect} from 'react-redux';
 import binanceServices from '../../binanceApi/config';
 import CoinInfoItem from '../../components/coins/CoinInfoItem';
+import Header from '../../components/coins/Header';
 import {loadCoins, addFavorite, removeFavorite} from '../../redux/modules/coins/actions';
 
 class AllCoinScreen extends Component{
-    static navigationOptions = {
-        tabBarLabel: 'All',
-        header: null,
-    };
+    static navigationOptions = ({navigation}) => {
+        const { params = {} } = navigation.state;
+        return {
+                    header: (
+                            <Header 
+                                onChangeText={text => params.onSearchCoin(text)} />
+                        ),
+                    tabBarLabel: 'All',
+                }
+    }
 
     constructor(props){
         super(props);
@@ -33,6 +41,12 @@ class AllCoinScreen extends Component{
         this.loadCoinInterval = null;
     }
 
+    onSearchCoin = text => {
+        console.log(text);
+        // TODO
+        // this.props.loadCoins();
+    }
+
     loadAllCoin(){
         console.log('First click' + this.props.isCoinLoading);
         if(this.props.isCoinLoading){
@@ -42,8 +56,9 @@ class AllCoinScreen extends Component{
     }
 
     componentDidMount(){
-        // this.loadAllCoin();
-        // this.loadCoinInterval = setInterval(this.loadAllCoin, 3000);
+        this.props.navigation.setParams({
+            onSearchCoin: this.onSearchCoin
+        })
     }
 
     componentWillUnmount(){
@@ -77,9 +92,6 @@ class AllCoinScreen extends Component{
                 <View style={styles.header}>
                     <TouchableWithoutFeedback onPress={() => {
                         this.state.nameAsc = this.state.nameAsc === 0 ? 1 : -1*this.state.nameAsc;
-                        // this.setState({
-                        //     allCoins: this._sortByName(this.state.allCoins)
-                        // });
                     }}>
                         <View style={styles.symbol}>
                             <Text>Name</Text>
