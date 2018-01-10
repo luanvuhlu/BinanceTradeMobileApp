@@ -5,7 +5,8 @@ import {
     StyleSheet,
     FlatList,
     RefreshControl,
-   TouchableNativeFeedback
+    TouchableWithoutFeedback,
+    TouchableNativeFeedback
 } from 'react-native';
 import {connect} from 'react-redux';
 import binanceServices from '../../binanceApi/config';
@@ -74,17 +75,21 @@ class AllCoinScreen extends Component{
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableNativeFeedback onPress={() => {
+                    <TouchableWithoutFeedback onPress={() => {
                         this.state.nameAsc = this.state.nameAsc === 0 ? 1 : -1*this.state.nameAsc;
                         // this.setState({
                         //     allCoins: this._sortByName(this.state.allCoins)
                         // });
                     }}>
-                        <Text style={styles.symbol}>Name</Text>
-                    </TouchableNativeFeedback>
-                    <TouchableNativeFeedback>
-                        <Text style={styles.price}>Price(L)</Text>
-                    </TouchableNativeFeedback>
+                        <View style={styles.symbol}>
+                            <Text>Name</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback>
+                        <View style={styles.price}>
+                            <Text>Price(L)</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
                     <View style={styles.favorites}/>
                 </View>
                 <FlatList

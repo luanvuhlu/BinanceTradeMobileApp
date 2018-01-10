@@ -4,7 +4,8 @@ import {
     View,
     StyleSheet,
     TouchableHighlight,
-    TouchableNativeFeedback
+    TouchableNativeFeedback,
+    TouchableWithoutFeedback
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
@@ -33,12 +34,12 @@ class CoinInfoItem extends React.PureComponent {
 
     render(){
         return (
-            <TouchableNativeFeedback
+            <TouchableWithoutFeedback
                 onPress={this._onPress}>
                 <View style={styles.container}>
                     <Text style={styles.symbol}>{this.props.item.symbol}</Text>
                     <Text style={styles.price}>{this.props.item.price}</Text>
-                    <TouchableNativeFeedback style={styles.favorites} onPress={() => {
+                    <TouchableWithoutFeedback style={styles.favorites} onPress={() => {
                         if(this.state.favorite){
                             this.props.removeFavorite(this.props.item);
                         }else{
@@ -49,10 +50,10 @@ class CoinInfoItem extends React.PureComponent {
                         })
                     }}>
                         <Icon name={this.state.favorite ? 'star' : 'star-o'} size={30} color={this.state.favorite ? 'yellow': 'black'} />
-                    </TouchableNativeFeedback>
+                    </TouchableWithoutFeedback>
 
                 </View>
-            </TouchableNativeFeedback>
+            </TouchableWithoutFeedback>
         );
     }
 }
