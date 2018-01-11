@@ -11,7 +11,6 @@ class Header extends React.PureComponent {
 		return (
 			<View>
 				<SearchBar
-					round
 					lightTheme
 					onChangeText={this.props.onChangeText}
 					placeholder='Search here'
