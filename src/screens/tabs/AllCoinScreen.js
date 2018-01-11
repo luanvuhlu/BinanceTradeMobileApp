@@ -34,7 +34,8 @@ class AllCoinScreen extends Component{
             coins: [],
             favorites: [],
             isLoading : false,
-            nameAsc: 1
+            nameAsc: 1,
+            searchText: null,
         };
         this.loadAllCoin = this.loadAllCoin.bind(this);
         // this._sortByName = this._sortByName.bind(this);
@@ -43,6 +44,9 @@ class AllCoinScreen extends Component{
 
     onSearchCoin = text => {
         console.log(text);
+        this.setState({
+            searchText: text
+        });
         // TODO
         // this.props.loadCoins();
     }
@@ -86,6 +90,13 @@ class AllCoinScreen extends Component{
         return allCoins.sort((a, b) => nameAsc *(a-b));
     }
 
+    getCoins(){
+        if(this.state.searchText === null || this.state.searchText === ''){
+            return this.props.coins;
+        }
+        return this.props.coins.filter(c => c.symbol.startsWith(this.state.searchText.toUpperCase()));
+    }
+
     render(){
         return (
             <View style={styles.container}>
@@ -106,7 +117,7 @@ class AllCoinScreen extends Component{
                 </View>
                 <FlatList
                     style={styles.coinList}
-                    data={this.props.coins}
+                    data={this.getCoins()}
                     renderItem = {this._renderItem}
                     keyExtractor={(item) => item.symbol}
                     onPressItem={() => {

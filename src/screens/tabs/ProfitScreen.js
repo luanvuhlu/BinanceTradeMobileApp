@@ -5,10 +5,10 @@ import {
 } from 'react-native';
 
 class ProfitScreen extends Component{
-    static navigationOptions = {
-        tabBarLabel: 'Profit',
-        header: null,
-    };
+    // static navigationOptions = {
+    //     tabBarLabel: 'Profit',
+    //     header: null,
+    // };
 
     render(){
         return (

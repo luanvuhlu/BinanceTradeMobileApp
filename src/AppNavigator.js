@@ -7,7 +7,7 @@ import FavoritesScreen from './screens/tabs/FavoritesScreen';
 import AllCoinScreen from './screens/tabs/AllCoinScreen';
 import VNDScreen from './screens/tabs/VNDScreen';
 import ProfitScreen from './screens/tabs/ProfitScreen'
-const TabScreen = TabNavigator({
+const TopTabScreen = TabNavigator({
    allCoin: {
       screen: AllCoinScreen
    },
@@ -25,9 +25,13 @@ const TabScreen = TabNavigator({
     swipeEnabled: true,
 });
 
+// const BottomTabScreen = TabNavigator({
+  
+// });
+
 const AppNavigator = StackNavigator({
     home: {
-        screen: TabScreen,
+        screen: TopTabScreen,
     }
 },{
     initialRouteName: 'home',

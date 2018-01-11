@@ -9,27 +9,30 @@ import {
 import { Icon } from 'react-native-elements'
 import {connect} from 'react-redux';
 import {loadCoins, addFavorite, removeFavorite} from '../../redux/modules/coins/actions';
-// import {observer} from 'mobx-react';
+import Observer, {observer} from 'mobx-react';
 
-// @observer
-class CoinInfoItem extends React.PureComponent {
+@observer
+class CoinInfoItem extends Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            favorite: false
-        }
+        // this.state = {
+        //     favorite: false
+        // }
     }
+
     _onPress = () => {
         this.props.onPressItem(this.props.item);
     }
 
     componentWillReceiveProps(nextProps){
-        if(this.props.favorites.length !== nextProps.favorites.length){
-            this.setFavorite(nextProps);
-        }
+
+        // if(this.props.favorites.length !== nextProps.favorites.length){
+        //     this.setFavorite(nextProps);
+        // }
         // this.favorite = isFavorite(nextProps);
     }
+
     setFavorite(props){
         this.setState({
             favorite: props.favorites.some( f => f.symbol === this.props.item.symbol)
@@ -41,8 +44,8 @@ class CoinInfoItem extends React.PureComponent {
     }
     componentWillMount(){
         console.log('Coin Item will mount');
-        this.setFavorite(this.props);
-        // this.favorite = this.isFavorite(this.props);
+        // this.setFavorite(this.props);
+        this.favorite = this.isFavorite(this.props);
     }
 
     render(){
@@ -54,21 +57,17 @@ class CoinInfoItem extends React.PureComponent {
                     <Text style={styles.price}>{this.props.item.price}</Text>
                     <Icon
                         style={styles.favorites}
-                        name={this.state.favorite ? 'star' : 'star-o'}
-                        size={30} color={this.state.favorite ? 'yellow': 'black'}
+                        name={this.favorite ? 'star' : 'star-o'}
+                        size={30} color={this.favorite ? 'yellow': 'black'}
                         type='font-awesome'
                         underlayColor='white'
                         onPress={() => {
-                            this.setState({
-                                favorite: !this.state.favorite
-                            }, () => {
-                                if(this.state.favorite){
-                                    this.props.addFavorite(this.props.item);
-                                }else{
-                                    this.props.removeFavorite(this.props.item);
-                                }
-                            });
-                            // this.favorite = !this.favorite
+                            if(this.favorite){
+                                this.props.removeFavorite(this.props.item);
+                            }else{
+                                this.props.addFavorite(this.props.item);
+                            }
+                            this.favorite = !this.favorite
                         }} />
 
                 </View>

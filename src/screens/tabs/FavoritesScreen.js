@@ -15,27 +15,27 @@ import {connect} from 'react-redux';
 import {addFavorite, loadCoins, removeFavorite} from "../../redux/modules/coins/actions";
 
 class FavoritesScreen extends Component{
-    static navigationOptions = ({navigation}) => {
-        const { params = {} } = navigation.state;
-        return {
-                    header: (
-                            <Header 
-                                onChangeText={text => params.onSearchCoin(text)} />
-                        ),
-                    tabBarLabel: 'Favorites',
-                }
-    }
+    // static navigationOptions = ({navigation}) => {
+    //     const { params = {} } = navigation.state;
+    //     return {
+    //                 header: (
+    //                         <Header 
+    //                             onChangeText={text => params.onSearchCoin(text)} />
+    //                     ),
+    //                 tabBarLabel: 'Favorites',
+    //             }
+    // }
     constructor(props){
         super(props);
 
         this.loadAllCoin = this.loadAllCoin.bind(this);
     }
 
-    onSearchCoin = text => {
-        console.log(text);
-        // TODO
-        // this.props.loadCoins();
-    }
+    // onSearchCoin = text => {
+    //     console.log(text);
+    //     // TODO
+    //     // this.props.loadCoins();
+    // }
 
     loadAllCoin(){
         console.log(this.props.isCoinLoading);
@@ -46,9 +46,9 @@ class FavoritesScreen extends Component{
     }
 
     componentDidMount(){
-        this.props.navigation.setParams({
-            onSearchCoin: this.onSearchCoin
-        })
+        // this.props.navigation.setParams({
+        //     onSearchCoin: this.onSearchCoin
+        // })
     }
 
     componentWillUnmount(){

@@ -5,10 +5,10 @@ import {
 } from 'react-native';
 
 class VNDScreen extends Component{
-    static navigationOptions = {
-        tabBarLabel: 'VNĐ',
-        header: null,
-    };
+    // static navigationOptions = {
+    //     tabBarLabel: 'VNĐ',
+    //     header: null,
+    // };
 
     render(){
         return (
