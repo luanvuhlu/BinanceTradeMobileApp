@@ -7,6 +7,7 @@ import {
     RefreshControl,
     TouchableWithoutFeedback,
     TouchableNativeFeedback,
+    TouchableHighlight,
     Alert
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -14,15 +15,19 @@ import binanceServices from '../../binanceApi/config';
 import CoinInfoItem from '../../components/coins/CoinInfoItem';
 import Header from '../../components/coins/Header';
 import {loadCoins, addFavorite, removeFavorite} from '../../redux/modules/coins/actions';
+import {Icon} from 'react-native-elements';
 
 class AllCoinScreen extends Component{
     static navigationOptions = ({navigation}) => {
         const { params = {} } = navigation.state;
         return {
-                    header: (
-                            <Header 
-                                onChangeText={text => params.onSearchCoin(text)} />
-                        ),
+                    headerRight: (
+                        <Icon
+                            name='search'
+                            type='font-awesome'
+                            onPress={() => navigation.navigate('search')}
+                        />
+                    ),
                     tabBarLabel: 'All',
                 }
     }
@@ -38,6 +43,7 @@ class AllCoinScreen extends Component{
             searchText: null,
         };
         this.loadAllCoin = this.loadAllCoin.bind(this);
+        this._renderItem = this._renderItem.bind(this);
         // this._sortByName = this._sortByName.bind(this);
         this.loadCoinInterval = null;
     }
@@ -75,8 +81,10 @@ class AllCoinScreen extends Component{
         return (
           <CoinInfoItem
               item={listItem.item}
+              navigation={this.props.navigation}
+              favorite={this.props.favorites.some( f => f.symbol === listItem.item.symbol)}
               onPressItem = {item => {
-                  console.log(item);
+                  // console.log(item);
               }}
           />
         );

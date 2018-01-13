@@ -25,33 +25,21 @@ class CoinInfoItem extends Component {
         this.props.onPressItem(this.props.item);
     }
 
-    componentWillReceiveProps(nextProps){
+    // shouldComponentUpdate(){
+    //     return this.props.favorite != this.favorite;
+    // }
 
-        // if(this.props.favorites.length !== nextProps.favorites.length){
-        //     this.setFavorite(nextProps);
-        // }
-        // this.favorite = isFavorite(nextProps);
-    }
-
-    setFavorite(props){
-        this.setState({
-            favorite: props.favorites.some( f => f.symbol === this.props.item.symbol)
-        });
-    }
-
-    isFavorite(props){
-        return props.favorites.some( f => f.symbol === this.props.item.symbol)
-    }
     componentWillMount(){
         console.log('Coin Item will mount');
         // this.setFavorite(this.props);
-        this.favorite = this.isFavorite(this.props);
+        this.favorite = this.props.favorite;
     }
 
     render(){
         return (
             <TouchableHighlight
-                onPress={this._onPress}>
+                onPress={() => this.props.navigation.navigate('coinMarket')}
+                onLongPress={() => this.props.navigation.navigate('coinDetail')}>
                 <View style={styles.container}>
                     <Text style={styles.symbol}>{this.props.item.symbol}</Text>
                     <Text style={styles.price}>{this.props.item.price}</Text>

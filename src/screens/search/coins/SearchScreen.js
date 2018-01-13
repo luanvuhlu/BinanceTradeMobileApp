@@ -1,47 +1,65 @@
 import React, {Component} from 'react';
 import {
-    View,
     Text,
-    StyleSheet,
+    View,
     FlatList,
-    RefreshControl,
-    TouchableNativeFeedback,
-    TouchableWithoutFeedback
+    StyleSheet,
+    TouchableHightlight,
+    TouchableWithoutFeedback,
+    RefreshControl
 } from 'react-native';
-import binanceServices from '../../binanceApi/config';
-import CoinInfoItem from '../../components/coins/CoinInfoItem';
-import Header from '../../components/coins/Header';
+import CoinInfoItem from '../../../components/coins/CoinInfoItem';
+import Header from '../../../components/coins/Header';
 import {connect} from 'react-redux';
-import {addFavorite, loadCoins, removeFavorite} from "../../redux/modules/coins/actions";
+import {loadCoins, addFavorite, removeFavorite} from '../../../redux/modules/coins/actions'
 import {Icon} from 'react-native-elements';
 
-class FavoritesScreen extends Component{
+class SearchScreen extends Component{
     static navigationOptions = ({navigation}) => {
         const { params = {} } = navigation.state;
         return {
-                    headerRight: (
-                        <Icon
+            header: (
+                <Header
+                    onChangeText={text => params.onSearchCoin(text)} />
+            ),
+            headerRight: (
+                 <Icon
                             name='search'
                             type='font-awesome'
                             onPress={() => navigation.navigate('search')}
                         />
-                    ),
-                    tabBarLabel: 'Favorites',
-                }
+            ),
+            tabBarLabel: 'All',
+        }
     }
-
-    constructor(props){
+     constructor(props){
         super(props);
 
         this.loadAllCoin = this.loadAllCoin.bind(this);
         this._renderItem = this._renderItem.bind(this);
+        this.state = {
+            coins: [],
+            favorites: [],
+            isLoading : false,
+            nameAsc: 1,
+            searchText: null,
+        };
     }
 
-    // onSearchCoin = text => {
-    //     console.log(text);
-    //     // TODO
-    //     // this.props.loadCoins();
-    // }
+     onSearchCoin = text => {
+        console.log(text);
+        this.setState({
+            searchText: text
+        });
+        // TODO
+        // this.props.loadCoins();
+    }
+     componentDidMount(){
+        this.props.navigation.setParams({
+            onSearchCoin: this.onSearchCoin
+        });
+    }
+
 
     loadAllCoin(){
         console.log(this.props.isCoinLoading);
@@ -51,18 +69,22 @@ class FavoritesScreen extends Component{
         this.props.loadCoins();
     }
 
-
     _renderItem(listItem){
         return (
           <CoinInfoItem
               item={listItem.item}
-              navigation={this.props.navigation}
-              favorite={true}
+              favorite={this.props.favorites.some( f => f.symbol === listItem.item.symbol)}
               onPressItem = {item => {
-                  // console.log(item);
+                  console.log(item);
               }}
           />
         );
+    }
+    getCoins(){
+        if(this.state.searchText === null || this.state.searchText === ''){
+            return this.props.coins;
+        }
+        return this.props.coins.filter(c => c.symbol.startsWith(this.state.searchText.toUpperCase()));
     }
 
     render(){
@@ -71,9 +93,6 @@ class FavoritesScreen extends Component{
                 <View style={styles.header}>
                     <TouchableWithoutFeedback onPress={() => {
                         this.state.nameAsc = this.state.nameAsc === 0 ? 1 : -1*this.state.nameAsc;
-                        // this.setState({
-                        //     allCoins: this._sortByName(this.state.allCoins)
-                        // });
                     }}>
                         <View style={styles.symbol}>
                             <Text>Name</Text>
@@ -88,13 +107,14 @@ class FavoritesScreen extends Component{
                 </View>
                 <FlatList
                     style={styles.coinList}
-                    data={this.props.favorites}
+                    data={this.getCoins()}
                     renderItem = {this._renderItem}
                     keyExtractor={(item) => item.symbol}
                     onPressItem={() => {
                     }}
                     refreshControl = {
                         <RefreshControl
+                            title="Refreshing"
                             refreshing={this.props.isCoinLoading}
                             onRefresh={this.loadAllCoin}
                         />
@@ -127,12 +147,14 @@ const styles = StyleSheet.create({
     }
 });
 const mapStateToProps = (state, ownProps) => ({
+    coins: state.coins.coins,
     favorites: state.coins.favorites,
     isCoinLoading: state.coins.isCoinLoading
-})
+});
 const mapDispatchToProps = {
     loadCoins,
     addFavorite,
     removeFavorite
 };
-export default connect(mapStateToProps, mapDispatchToProps)(FavoritesScreen);
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchScreen);

@@ -1,9 +1,16 @@
-import {ADD_FAVORITE, LOAD_COINS, REMOVE_FAVORITE, LOADING_COIN} from './actions';
+import {
+    ADD_FAVORITE,
+    LOAD_COINS,
+    REMOVE_FAVORITE,
+    LOADING_COIN,
+    SELECTED_COIN,
+} from './actions';
 
 const initialState = {
     coins: [],
     favorites: [],
-    isCoinLoading: false
+    isCoinLoading: false,
+    selectedCoin: null
 }
 
 export default function reducer(state = initialState, action){
@@ -30,6 +37,11 @@ export default function reducer(state = initialState, action){
             return {
                 ...state,
                 favorites: state.favorites.filter(f => f.symbol !== action.payload.symbol),
+            }
+        case SELECTED_COIN:
+            return {
+                ...state,
+                selectedCoin: action.payload
             }
         default:
             return state;
