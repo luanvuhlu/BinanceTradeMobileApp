@@ -4,7 +4,8 @@ import {
     View,
     StyleSheet,
     TouchableHighlight,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    TouchableOpacity
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 import {connect} from 'react-redux';
@@ -37,7 +38,7 @@ class CoinInfoItem extends Component {
 
     render(){
         return (
-            <TouchableHighlight
+            <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('coinMarket')}
                 onLongPress={() => this.props.navigation.navigate('coinDetail')}>
                 <View style={styles.container}>
@@ -59,7 +60,7 @@ class CoinInfoItem extends Component {
                         }} />
 
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         );
     }
 }

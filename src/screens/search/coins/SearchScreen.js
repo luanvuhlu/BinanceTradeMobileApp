@@ -73,6 +73,7 @@ class SearchScreen extends Component{
         return (
           <CoinInfoItem
               item={listItem.item}
+              navigation={this.props.navigation}
               favorite={this.props.favorites.some( f => f.symbol === listItem.item.symbol)}
               onPressItem = {item => {
                   console.log(item);
